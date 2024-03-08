@@ -1,8 +1,12 @@
+using ProductCatalog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<CatalogSettings>(
+    builder.Configuration.GetSection("CatalogSettings"));
 
 var app = builder.Build();
 

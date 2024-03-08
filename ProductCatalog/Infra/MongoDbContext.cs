@@ -1,17 +1,18 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace ProductCatalog.Infra
 {
     public class MongoDbContext
     {
-        private readonly IMongoCollection<Product> _products;
+        public readonly IMongoCollection<Product> _products;
         private readonly IMongoCollection<Category> _categories;
         private readonly IMongoCollection<Catalog> _catalogItems;
 
-        public MongoDbContext(string connectionString, string databaseName)
+        public MongoDbContext(IOptions<CatalogSettings> catalogSettings)
         {
-            var client = new MongoClient(connectionString);
-            var database = client.GetDatabase(databaseName);
+            var client = new MongoClient(catalogSettings.Value.ConnectionString);
+            var database = client.GetDatabase(catalogSettings.Value.Database);
 
             _products = database.GetCollection<Product>("products");
             _categories = database.GetCollection<Category>("categories");
@@ -23,9 +24,9 @@ namespace ProductCatalog.Infra
             await _products.InsertOneAsync(product);
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            return _products.Find(p => true).ToList();
+            return await _products.Find(p => true).ToListAsync();
         }
 
         public async Task CreateCategory(Category category)
@@ -33,9 +34,9 @@ namespace ProductCatalog.Infra
             await _categories.InsertOneAsync(category);
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            return _categories.Find(c => true).ToList();
+            return await _categories.Find(c => true).ToListAsync();
         }
 
         public async Task CreateCatalog(Catalog catalog)
@@ -43,9 +44,9 @@ namespace ProductCatalog.Infra
             await _catalogItems.InsertOneAsync(catalog);
         }
 
-        public IList<Catalog> GetAllCatalogs()
+        public async Task<IEnumerable<Catalog>> GetAllCatalogs()
         {
-            return _catalogItems.Find(c => true).ToList();
+            return await _catalogItems.Find(c => true).ToListAsync();
         }
     }
 }
