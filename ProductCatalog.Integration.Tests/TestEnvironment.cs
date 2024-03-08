@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 
-namespace ProductCatalog.Integration.Tests.Setup
+namespace ProductCatalog.Integration.Tests
 {
     [SetUpFixture]
     public class TestEnvironment
     {
         public static WebApplicationFactory<Program> Factory;
 
-        [OneTimeSetUp] 
+        [OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
             Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
@@ -23,8 +23,8 @@ namespace ProductCatalog.Integration.Tests.Setup
         }
 
         [OneTimeTearDown]
-        public void RunAfterAnyTests() 
-        { 
+        public void RunAfterAnyTests()
+        {
             Factory.Dispose();
         }
     }
