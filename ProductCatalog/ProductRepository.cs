@@ -6,6 +6,7 @@ namespace ProductCatalog
     public class ProductRepository
     {
         private readonly MongoContext _context;
+
         public ProductRepository(MongoContext context)
         {
             _context = context;
