@@ -17,7 +17,6 @@ namespace ProductCatalog.Integration.Tests
                 var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.Tests.json")
                 .Build();
-
                 builder.UseConfiguration(configuration);
             });
         }

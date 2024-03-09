@@ -5,14 +5,14 @@ namespace ProductCatalog.Infra
 {
     public class MongoDbContext
     {
-        public readonly IMongoCollection<Product> _products;
+        public IMongoCollection<Product> _products;
         private readonly IMongoCollection<Category> _categories;
         private readonly IMongoCollection<Catalog> _catalogItems;
 
         public MongoDbContext(IOptions<CatalogSettings> catalogSettings)
         {
             var client = new MongoClient(catalogSettings.Value.ConnectionString);
-            var database = client.GetDatabase(catalogSettings.Value.Database);
+            var database = client.GetDatabase(catalogSettings.Value.DatabaseName);
 
             _products = database.GetCollection<Product>("products");
             _categories = database.GetCollection<Category>("categories");

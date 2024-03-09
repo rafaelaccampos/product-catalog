@@ -4,7 +4,7 @@ namespace ProductCatalog
 {
     public class Product
     {
-        public ObjectId MyProperty { get; set; }
+        public ObjectId Id { get; set; }
 
         public string Title { get; set; }
 
