@@ -22,9 +22,9 @@ namespace ProductCatalog.Integration.Tests.Specs
             };
 
             await _context.CreateProduct(product);
-            var mongoContext = GetService<MongoDbContext>();
+            var mongoContext = GetService<MongoContext>();
 
-            var productInDatabase = await mongoContext._products.Find(product => true).FirstOrDefaultAsync();
+            var productInDatabase = await mongoContext.Products.Find(product => true).FirstOrDefaultAsync();
 
             using (new AssertionScope())
             {
