@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using ProductCatalog.Entities;
 using ProductCatalog.Infra;
 
 namespace ProductCatalog.Integration.Tests.Setup

@@ -1,4 +1,4 @@
-﻿namespace ProductCatalog
+﻿namespace ProductCatalog.Entities
 {
     public class CategoryItem
     {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using ProductCatalog.Entities;
 
 namespace ProductCatalog.Infra
 {

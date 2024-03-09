@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace ProductCatalog
+namespace ProductCatalog.Entities
 {
     public class Catalog
     {
