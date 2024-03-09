@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using ProductCatalog.Entities;
-using ProductCatalog.Infra;
 
 namespace ProductCatalog.Infra.Repositories
 {

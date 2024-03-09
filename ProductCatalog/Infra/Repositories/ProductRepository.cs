@@ -1,6 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using ProductCatalog.Entities;
-using ProductCatalog.Infra;
 
 namespace ProductCatalog.Infra.Repositories
 {
@@ -13,14 +13,32 @@ namespace ProductCatalog.Infra.Repositories
             _context = context;
         }
 
-        public async Task CreateProduct(Product product)
+        public async Task Create(Product product)
         {
             await _context.Products.InsertOneAsync(product);
         }
 
-        public async Task<IEnumerable<Product>> GetAllProducts()
+        public async Task<IEnumerable<Product?>> GetAll()
         {
             return await _context.Products.Find(p => true).ToListAsync();
+        }
+
+        public async Task<Product?> GetProductById(ObjectId id)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+            return await _context.Products.Find(filter).SingleOrDefaultAsync();
+        }
+
+        public async Task Update(ObjectId id, string category)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+            await _context.Products.UpdateOneAsync(filter, category);
+        }
+
+        public async Task Delete(ObjectId id)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+            await _context.Products.DeleteOneAsync(filter);
         }
     }
 }
