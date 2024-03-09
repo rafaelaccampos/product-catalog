@@ -8,7 +8,6 @@ namespace ProductCatalog.Integration.Tests.Specs
 {
     public class ProductTests : DatabaseBase
     {
-
         [Test]
         public async Task ShouldBeAbleToCreateAProduct()
         {
@@ -21,9 +20,10 @@ namespace ProductCatalog.Integration.Tests.Specs
                 Price = 2.50M
             };
 
-            await _context.CreateProduct(product);
-            var mongoContext = GetService<MongoContext>();
+            var productRepository = new ProductRepository(_context);
+            await productRepository.CreateProduct(product);
 
+            var mongoContext = GetService<MongoContext>();
             var productInDatabase = await mongoContext.Products.Find(product => true).FirstOrDefaultAsync();
 
             using (new AssertionScope())

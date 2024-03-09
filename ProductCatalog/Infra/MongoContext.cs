@@ -20,16 +20,6 @@ namespace ProductCatalog.Infra
 
         public IMongoCollection<Catalog> Catalogs => _database.GetCollection<Catalog>("catalogs");
 
-        public async Task CreateProduct(Product product)
-        {
-            await Products.InsertOneAsync(product);
-        }
-
-        public async Task<IEnumerable<Product>> GetAllProducts()
-        {
-            return await Products.Find(p => true).ToListAsync();
-        }
-
         public async Task CreateCategory(Category category)
         {
             await Categories.InsertOneAsync(category);
