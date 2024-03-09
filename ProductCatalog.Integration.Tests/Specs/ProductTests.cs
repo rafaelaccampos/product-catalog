@@ -94,5 +94,51 @@ namespace ProductCatalog.Integration.Tests.Specs
 
             productInDatabase.Should().BeEquivalentTo(products.First());
         }
+
+        [Test]
+        public async Task ShouldBeAbleToUpdateAProduct()
+        {
+            var product = new Product
+            {
+                Title = "Refrigerante",
+                Category = "Bebida",
+                Description = "Guaraná",
+                Owner = "John",
+                Price = 9.00M
+            };
+
+            await _context.Products.InsertOneAsync(product);
+           
+            var mongoContext = GetService<MongoContext>();
+            var productRepository = new ProductRepository(mongoContext);
+            await productRepository.Update(product.Id, "Bebida gelada");
+
+            var productUpdated = await mongoContext.Products.Find(p => true).FirstOrDefaultAsync();
+
+            productUpdated.Category.Should().BeEquivalentTo("Bebida gelada");
+        }
+
+        [Test]
+        public async Task ShouldBeAbleToDeleteAProduct()
+        {
+            var product = new Product
+            {
+                Title = "Refrigerante",
+                Category = "Bebida",
+                Description = "Guaraná",
+                Owner = "John",
+                Price = 9.00M
+            };
+
+            await _context.Products.InsertOneAsync(product);
+
+            var mongoContext = GetService<MongoContext>();
+            var productRepository = new ProductRepository(mongoContext);
+            await productRepository.Delete(product.Id);
+
+            var productInDatabase = await mongoContext.Products.Find(p => true).FirstOrDefaultAsync();
+
+            productInDatabase.Should().BeNull();
+        }
     }
 }

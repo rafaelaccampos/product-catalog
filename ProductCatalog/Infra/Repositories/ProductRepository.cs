@@ -25,19 +25,31 @@ namespace ProductCatalog.Infra.Repositories
 
         public async Task<Product?> GetProductById(ObjectId id)
         {
-            var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+            var filter = Builders<Product>
+                .Filter
+                .Eq(p => p.Id, id);
+
             return await _context.Products.Find(filter).SingleOrDefaultAsync();
         }
 
         public async Task Update(ObjectId id, string category)
         {
-            var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
-            await _context.Products.UpdateOneAsync(filter, category);
+            var filter = Builders<Product>
+                .Filter.Eq(p => p.Id, id);
+
+            var updatedCategory = Builders<Product>
+                .Update
+                .Set(p => p.Category, category);
+
+            await _context.Products.UpdateOneAsync(filter, updatedCategory);
         }
 
         public async Task Delete(ObjectId id)
         {
-            var filter = Builders<Product>.Filter.Eq(p => p.Id, id);
+            var filter = Builders<Product>
+                .Filter
+                .Eq(p => p.Id, id);
+
             await _context.Products.DeleteOneAsync(filter);
         }
     }
