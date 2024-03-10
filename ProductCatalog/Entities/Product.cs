@@ -4,16 +4,30 @@ namespace ProductCatalog.Entities
 {
     public class Product
     {
-        public ObjectId Id { get; set; }
+        public Product(
+            string title, 
+            string description, 
+            decimal price, 
+            string category,
+            string owner)
+        { 
+            Title = title; 
+            Description = description; 
+            Price = price; 
+            Category = category; 
+            Owner = owner;
+        }
 
-        public string Title { get; set; } = null!;
+        public ObjectId Id { get; private set; }
 
-        public string Description { get; set; } = null!;
+        public string Title { get; private set; } = null!;
 
-        public decimal Price { get; set; }
+        public string Description { get; private set; } = null!;
 
-        public string Category { get; set; } = null!;
+        public decimal Price { get; private set; }
 
-        public string Owner { get; set; } = null!;
+        public string Category { get; private set; } = null!;
+
+        public string Owner { get; private set; } = null!;
     }
 }
