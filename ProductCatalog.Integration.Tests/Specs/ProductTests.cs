@@ -1,4 +1,5 @@
 using FluentAssertions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProductCatalog.Entities;
 using ProductCatalog.Infra;
@@ -63,6 +64,17 @@ namespace ProductCatalog.Integration.Tests.Specs
         }
 
         [Test]
+        public async Task ShouldReturnEmptyWhenGetAllProductsDoesNotHaveValue()
+        {
+            var mongoContext = GetService<MongoContext>();
+            var productRepository = new ProductRepository(mongoContext);
+
+            var productsInDatabase = await productRepository.GetAll();
+
+            productsInDatabase.Should().BeEmpty();
+        }
+
+        [Test]
         public async Task ShouldBeAbleToGetProductById()
         {
             var products = new List<Product>
@@ -96,6 +108,17 @@ namespace ProductCatalog.Integration.Tests.Specs
         }
 
         [Test]
+        public async Task ShouldReturnNullWhenGetProductByIdDoesNotHaveValue()
+        {
+            var mongoContext = GetService<MongoContext>();
+            var productRepository = new ProductRepository(mongoContext);
+
+            var productInDatabase = await productRepository.GetProductById(new ObjectId("65ecf78759159f2e38c2e514"));
+
+            productInDatabase.Should().BeNull();
+        }
+
+        [Test]
         public async Task ShouldBeAbleToUpdateAProduct()
         {
             var product = new Product
@@ -116,6 +139,27 @@ namespace ProductCatalog.Integration.Tests.Specs
             var productUpdated = await mongoContext.Products.Find(p => true).FirstOrDefaultAsync();
 
             productUpdated.Category.Should().BeEquivalentTo("Bebida gelada");
+        }
+
+        [Test]
+        public async Task ShouldNotBeABleToUpdateAProductWhenItsDoesNotExists()
+        {
+            var product = new Product
+            {
+                Id = new ObjectId("65ecf78759159f2e38c2e514"),
+                Title = "Refrigerante",
+                Category = "Bebida",
+                Description = "Guaraná",
+                Owner = "John",
+                Price = 9.00M
+            };
+            var mongoContext = GetService<MongoContext>();
+            var productRepository = new ProductRepository(mongoContext);
+            await productRepository.Update(product.Id, "Bebida gelada");
+
+            var productUpdated = await mongoContext.Products.Find(p => true).FirstOrDefaultAsync();
+
+            productUpdated.Should().BeNull();
         }
 
         [Test]
