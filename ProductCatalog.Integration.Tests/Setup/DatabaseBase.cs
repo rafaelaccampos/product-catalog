@@ -22,6 +22,7 @@ namespace ProductCatalog.Integration.Tests.Setup
         private async Task ClearCollections()
         {
             await _context.Products.DeleteManyAsync(Builders<Product>.Filter.Empty);
+            await _context.Categories.DeleteManyAsync(Builders<Category>.Filter.Empty);
         }
 
         public static T GetService<T>()

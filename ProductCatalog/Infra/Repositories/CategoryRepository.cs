@@ -19,10 +19,11 @@ namespace ProductCatalog
             await _context.Categories.InsertOneAsync(category);
         }
 
-        public async Task<IEnumerable<Category>> GetAll()
+        public async Task<IEnumerable<Category?>> GetAll()
         {
             return await _context.Categories.Find(c => true).ToListAsync();
         }
+
         public async Task<Category?> GetCategoryById(ObjectId id)
         {
             var filter = Builders<Category>
