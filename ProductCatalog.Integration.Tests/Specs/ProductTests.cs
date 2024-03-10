@@ -13,14 +13,7 @@ namespace ProductCatalog.Integration.Tests.Specs
         [Test]
         public async Task ShouldBeAbleToCreateAProduct()
         {
-            var product = new Product
-            {
-                Title = "Água com gás",
-                Category = "Bebida",
-                Description = "Água gaseificada",
-                Owner = "John",
-                Price = 2.50M
-            };
+            var product = new Product("Água com gás", "Bebida", 2.50M, "Água gaseificada", "John");
 
             var productRepository = new ProductRepository(_context);
             await productRepository.Create(product);
@@ -36,26 +29,12 @@ namespace ProductCatalog.Integration.Tests.Specs
         {
             var products = new List<Product>
             {
-                new Product
-                {
-                    Title = "Refrigerante",
-                    Category = "Bebida",
-                    Description = "Guaraná",
-                    Owner = "John",
-                    Price = 9.00M
-                },
-                new Product
-                {
-                    Title = "Vinho",
-                    Category = "Bebida Alcoólica",
-                    Description = "Vinho Argentino",
-                    Owner = "Jane",
-                    Price = 10.00M
-                }
+                new Product("Refrigerante", "Guaraná", 9.00M, "Bebida", "John"),
+                new Product("Vinho", "Vinho Argentino", 10.00M, "Bebida Alcoólica", "Jane")
             };
 
             await _context.Products.InsertManyAsync(products);
-            
+
             var mongoContext = GetService<MongoContext>();
             var productRepository = new ProductRepository(mongoContext);
             var productsInDatabase = await productRepository.GetAll();
@@ -79,22 +58,8 @@ namespace ProductCatalog.Integration.Tests.Specs
         {
             var products = new List<Product>
             {
-                new Product
-                {
-                    Title = "Refrigerante",
-                    Category = "Bebida",
-                    Description = "Guaraná",
-                    Owner = "John",
-                    Price = 9.00M
-                },
-                new Product
-                {
-                    Title = "Vinho",
-                    Category = "Bebida Alcoólica",
-                    Description = "Vinho Argentino",
-                    Owner = "Jane",
-                    Price = 10.00M
-                }
+                new Product("Refrigerante", "Guaraná", 9.00M, "Bebida", "John"),
+                new Product("Vinho", "Vinho Argentino", 10.00M, "Bebida Alcoólica", "Jane")
             };
 
             await _context.Products.InsertManyAsync(products);
@@ -121,17 +86,10 @@ namespace ProductCatalog.Integration.Tests.Specs
         [Test]
         public async Task ShouldBeAbleToUpdateAProduct()
         {
-            var product = new Product
-            {
-                Title = "Refrigerante",
-                Category = "Bebida",
-                Description = "Guaraná",
-                Owner = "John",
-                Price = 9.00M
-            };
+            var product = new Product("Refrigerante", "Guaraná", 9.00M, "Bebida", "John");
 
             await _context.Products.InsertOneAsync(product);
-           
+
             var mongoContext = GetService<MongoContext>();
             var productRepository = new ProductRepository(mongoContext);
             await productRepository.Update(product.Id, "Bebida gelada");
@@ -144,18 +102,11 @@ namespace ProductCatalog.Integration.Tests.Specs
         [Test]
         public async Task ShouldNotBeABleToUpdateAProductWhenItsDoesNotExists()
         {
-            var product = new Product
-            {
-                Id = new ObjectId("65ecf78759159f2e38c2e514"),
-                Title = "Refrigerante",
-                Category = "Bebida",
-                Description = "Guaraná",
-                Owner = "John",
-                Price = 9.00M
-            };
+            var product = new Product("Refrigerante", "Guaraná", 9.00M, "Bebida", "John");
+
             var mongoContext = GetService<MongoContext>();
             var productRepository = new ProductRepository(mongoContext);
-            await productRepository.Update(product.Id, "Bebida gelada");
+            await productRepository.Update(new ObjectId("65ecf78759159f2e38c2e514"), "Bebida gelada");
 
             var productUpdated = await mongoContext.Products.Find(p => true).FirstOrDefaultAsync();
 
@@ -165,14 +116,7 @@ namespace ProductCatalog.Integration.Tests.Specs
         [Test]
         public async Task ShouldBeAbleToDeleteAProduct()
         {
-            var product = new Product
-            {
-                Title = "Refrigerante",
-                Category = "Bebida",
-                Description = "Guaraná",
-                Owner = "John",
-                Price = 9.00M
-            };
+            var product = new Product("Refrigerante", "Guaraná", 9.00M, "Bebida", "John");
 
             await _context.Products.InsertOneAsync(product);
 
