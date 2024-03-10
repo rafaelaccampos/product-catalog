@@ -6,9 +6,9 @@ using ProductCatalog.Infra;
 using ProductCatalog.Infra.Repositories;
 using ProductCatalog.Integration.Tests.Setup;
 
-namespace ProductCatalog.Integration.Tests.Specs
+namespace ProductCatalog.Integration.Tests.Specs.Repositories
 {
-    public class ProductTests : DatabaseBase
+    public class ProductRepositoryTests : DatabaseBase
     {
         [Test]
         public async Task ShouldBeAbleToCreateAProduct()
@@ -21,7 +21,7 @@ namespace ProductCatalog.Integration.Tests.Specs
             var mongoContext = GetService<MongoContext>();
             var productInDatabase = await mongoContext.Products.Find(product => true).FirstOrDefaultAsync();
 
-           productInDatabase.Should().BeEquivalentTo(product);
+            productInDatabase.Should().BeEquivalentTo(product);
         }
 
         [Test]

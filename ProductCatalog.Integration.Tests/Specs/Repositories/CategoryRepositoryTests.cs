@@ -4,9 +4,8 @@ using MongoDB.Driver;
 using ProductCatalog.Entities;
 using ProductCatalog.Infra;
 using ProductCatalog.Integration.Tests.Setup;
-using System.Security.Cryptography.Xml;
 
-namespace ProductCatalog.Integration.Tests.Specs
+namespace ProductCatalog.Integration.Tests.Specs.Repositories
 {
     public class CategoryRepositoryTests : DatabaseBase
     {
