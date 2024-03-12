@@ -24,7 +24,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
 
             var response = await _httpClient.PostAsync(URL_BASE, productExpected.ToJsonContent());
             var responseContent = await response.Content.ReadAsStringAsync();
-            var product = JsonSerializer.Deserialize<Product>(responseContent);
+            var product = JsonSerializer.Deserialize<ProductOutput>(responseContent);
 
             using (new AssertionScope())
             {
