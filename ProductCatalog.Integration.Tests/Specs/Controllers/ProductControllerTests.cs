@@ -24,12 +24,11 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
 
             var response = await _httpClient.PostAsync(URL_BASE, productExpected.ToJsonContent());
             var responseContent = await response.Content.ReadAsStringAsync();
-            var product = JsonSerializer.Deserialize<ProductOutput>(responseContent);
 
             using (new AssertionScope())
             {
                 response.Should().HaveStatusCode(HttpStatusCode.OK);
-                product.Should().BeEquivalentTo(productExpected);
+                responseContent.ShouldBeAnEquivalentJson(productExpected);
             }
         }
     }
