@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
+using Newtonsoft.Json;
 using ProductCatalog.Entities;
 using ProductCatalog.Integration.Tests.Extensions;
 using ProductCatalog.Integration.Tests.Setup;
 using System.Net;
-using System.Text.Json;
 
 namespace ProductCatalog.Integration.Tests.Specs.Controllers
 {
@@ -15,15 +15,17 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
         [Test]
         public async Task ShouldBeAbleToCreateAProduct()
         {
-            var productExpected = new Product(
+            var product = new Product(
                 "Tênis de corrida",
-                "Um calçado esportivo projetado para corrida, com sola amortecida", 
-                10.00M, 
-                "Calçados esportivos", 
+                "Um calçado esportivo projetado para corrida, com sola amortecida",
+                10.00M,
+                "Calçados esportivos",
                 "David");
 
-            var response = await _httpClient.PostAsync(URL_BASE, productExpected.ToJsonContent());
+            var response = await _httpClient.PostAsync(URL_BASE, product.ToJsonContent());
             var responseContent = await response.Content.ReadAsStringAsync();
+
+            var productExpected = JsonConvert.SerializeObject(product);
 
             using (new AssertionScope())
             {
