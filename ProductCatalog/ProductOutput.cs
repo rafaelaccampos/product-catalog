@@ -4,7 +4,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
 {
     public class ProductOutput
     {
-        public ObjectId Id { get; private set; }
+        public string Id { get; private set; }
 
         public string Title { get; private set; } = null!;
 

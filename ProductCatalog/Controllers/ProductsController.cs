@@ -22,7 +22,7 @@ namespace ProductCatalog.Controllers
             var productRepository = new ProductRepository(_context);
             await productRepository.Create(product);
 
-            return Ok(product);
+            return Ok();
         }
     }
 }
