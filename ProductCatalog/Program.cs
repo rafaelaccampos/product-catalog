@@ -1,5 +1,6 @@
 using ProductCatalog;
 using ProductCatalog.Infra;
+using ProductCatalog.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<MongoContext>();
+builder.Services.AddScoped<ProductRepository>();
 builder.Services.Configure<CatalogSettings>(
     builder.Configuration.GetSection("CatalogSettings"));
 

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using ProductCatalog.Entities;
-using ProductCatalog.Infra;
 using ProductCatalog.Infra.Repositories;
 
 namespace ProductCatalog.Controllers
@@ -11,18 +9,17 @@ namespace ProductCatalog.Controllers
     [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly MongoContext _context;
+        private readonly ProductRepository _repository;
 
-        public ProductsController(MongoContext context)
+        public ProductsController(ProductRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Product product)
         {
-            var productRepository = new ProductRepository(_context);
-            await productRepository.Create(product);
+            await _repository.Create(product);
 
             return Created(nameof(GetProductById), null);
         }
@@ -30,8 +27,7 @@ namespace ProductCatalog.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(string id)
         {
-            var productRepository = new ProductRepository(_context);
-            var product = await productRepository.GetProductById(new ObjectId(id));
+            var product = await _repository.GetProductById(new ObjectId(id));
 
             if(product == null)
             {
@@ -44,8 +40,7 @@ namespace ProductCatalog.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var productRepository = new ProductRepository(_context);
-            var products = await productRepository.GetAll();
+            var products = await _repository.GetAll();
 
             return Ok(products);
         }
@@ -53,8 +48,7 @@ namespace ProductCatalog.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(string id, [FromBody] string category)
         {
-            var productRepository = new ProductRepository(_context);
-            await productRepository.Update(new ObjectId(id), category);
+            await _repository.Update(new ObjectId(id), category);
 
             return Ok();
         }
@@ -62,8 +56,7 @@ namespace ProductCatalog.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var productRepository = new ProductRepository(_context);
-            await productRepository.Delete(new ObjectId(id));
+            await _repository.Delete(new ObjectId(id));
 
             return NoContent();
         }
