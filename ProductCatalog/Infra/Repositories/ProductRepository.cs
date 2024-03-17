@@ -41,7 +41,7 @@ namespace ProductCatalog.Infra.Repositories
                 .Update
                 .Set(p => p.Category, category);
 
-            await _context.Products.UpdateOneAsync(filter, updatedCategory);
+          await _context.Products.UpdateOneAsync(filter, updatedCategory);
         }
 
         public async Task Delete(ObjectId id)
