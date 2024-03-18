@@ -32,7 +32,7 @@ namespace ProductCatalog.Infra.Repositories
             return await _context.Products.Find(filter).SingleOrDefaultAsync();
         }
 
-        public async Task Update(ObjectId id, string category)
+        public async Task<Product?> Update(ObjectId id, string category)
         {
             var filter = Builders<Product>
                 .Filter.Eq(p => p.Id, id);
@@ -41,16 +41,16 @@ namespace ProductCatalog.Infra.Repositories
                 .Update
                 .Set(p => p.Category, category);
 
-          await _context.Products.UpdateOneAsync(filter, updatedCategory);
+          return await _context.Products.FindOneAndUpdateAsync(filter, updatedCategory);
         }
 
-        public async Task Delete(ObjectId id)
+        public async Task<Product?> Delete(ObjectId id)
         {
             var filter = Builders<Product>
                 .Filter
                 .Eq(p => p.Id, id);
 
-            await _context.Products.DeleteOneAsync(filter);
+            return await _context.Products.FindOneAndDeleteAsync(filter);
         }
     }
 }

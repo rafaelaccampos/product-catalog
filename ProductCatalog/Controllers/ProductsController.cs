@@ -48,9 +48,9 @@ namespace ProductCatalog.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(string id, [FromBody] string category)
         {
-            await _repository.Update(new ObjectId(id), category);
+            var product = await _repository.Update(new ObjectId(id), category);
 
-            return Ok();
+            return Ok(product);
         }
 
         [HttpDelete("{id}")]
