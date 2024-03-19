@@ -9,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<MongoContext>();
 builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<CategoryRepository>();
 builder.Services.Configure<CatalogSettings>(
     builder.Configuration.GetSection("CatalogSettings"));
 

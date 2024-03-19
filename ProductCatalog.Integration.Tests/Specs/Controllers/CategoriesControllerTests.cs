@@ -9,7 +9,7 @@ using System.Net;
 
 namespace ProductCatalog.Integration.Tests.Specs.Controllers
 {
-    public class CategoryControllerTests : ApiBase
+    public class CategoriesControllerTests : ApiBase
     {
         private const string URL_BASE = "/categories";
 
