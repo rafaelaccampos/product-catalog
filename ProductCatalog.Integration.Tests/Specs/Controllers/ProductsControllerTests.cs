@@ -108,7 +108,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
         }
 
         [Test]
-        public async Task ShouldNotBeAbleToReturnProductsWhenItDoesNotExists()
+        public async Task ShouldNotBeAbleToReturnEmptyWhenProductsDoesNotExists()
         {
             var response = await _httpClient.GetAsync(URL_BASE);
             var responseContent = await response.Content.ReadAsStringAsync();

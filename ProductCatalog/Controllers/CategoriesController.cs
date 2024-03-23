@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using ProductCatalog.Entities;
 
 namespace ProductCatalog.Controllers
@@ -20,6 +21,27 @@ namespace ProductCatalog.Controllers
             await _repository.Create(category);
 
             return Ok();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategoryId(string id)
+        {
+            var category = await _repository.GetCategoryById(new ObjectId(id));
+
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(category);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var categories = await _repository.GetAll();
+
+            return Ok(categories);
         }
     }
 }
