@@ -1,9 +1,7 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using NUnit.Framework;
 using ProductCatalog.Entities;
 using ProductCatalog.Infra;
 using ProductCatalog.Integration.Tests.Extensions;
@@ -69,7 +67,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
         }
 
         [Test]
-        public async Task ShouldBeAbleToReturnNullWhenGetAllDoesNotHasValue()
+        public async Task ShouldBeAbleToReturnEmptyWhenGetAllDoesNotHasValue()
         {
             var response = await _httpClient.GetAsync(URL_BASE);
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -95,7 +93,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
             await _context.Categories.InsertManyAsync(categories);
 
             var mongoContext = GetService<MongoContext>();
-            var categoryFromDatabase = await mongoContext.Catalogs.Find(c => true).FirstOrDefaultAsync();
+            var categoryFromDatabase = await mongoContext.Categories.Find(c => true).FirstOrDefaultAsync();
 
             var response = await _httpClient.GetAsync($"{URL_BASE}/{categoryFromDatabase.Id}");
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -109,6 +107,43 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
                     options
                     .ExcludingMissingMembers()
                     .Excluding(c => c.Id));
+            }
+        }
+
+        [Test]
+        public async Task ShouldBeAbleToReturnNullWhenCategoryDoesNotExists()
+        {
+            var response = await _httpClient.GetAsync($"{URL_BASE}/65ecf78759159f2e38c2e514");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            var category = await _context.Categories.Find(c => true).FirstOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                response.Should().HaveStatusCode(HttpStatusCode.NotFound);
+                category.Should().BeNull();
+            }
+        }
+
+        [Test]
+        public async Task ShouldBeAbleToDeleteACategory()
+        {
+            var category = new Category("Calçados", "Calçados esportivos", "John");
+
+            await _context.Categories.InsertOneAsync(category);
+
+            var mongoContext = GetService<MongoContext>();
+            var categoryFromDatabase = await mongoContext.Categories.Find(c => true).FirstOrDefaultAsync();
+
+            var response = await _httpClient.DeleteAsync($"{URL_BASE}/{categoryFromDatabase.Id}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            var categoryDeleted = await mongoContext.Categories.Find(c => true).FirstOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                response.Should().HaveStatusCode(HttpStatusCode.NoContent);
+                categoryDeleted.Should().BeNull();
             }
         }
     }

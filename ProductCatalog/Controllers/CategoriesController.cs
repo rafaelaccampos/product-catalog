@@ -43,5 +43,13 @@ namespace ProductCatalog.Controllers
 
             return Ok(categories);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _repository.Delete(new ObjectId(id));
+
+            return NoContent();
+        }
     }
 }

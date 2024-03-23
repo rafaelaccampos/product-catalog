@@ -70,9 +70,9 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
         [Test]
         public async Task ShouldBeAbleToReturnNullAndNotFoundWhenProductDoesNotExists()
         {
-            var productFromDatabase = await _context.Products.Find(p => true).SingleOrDefaultAsync();
-
             var response = await _httpClient.GetAsync($"{URL_BASE}/65ecf78759159f2e38c2e514");
+
+            var productFromDatabase = await _context.Products.Find(p => true).SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
