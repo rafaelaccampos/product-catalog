@@ -20,7 +20,7 @@ namespace ProductCatalog.Controllers
         {
             await _repository.Create(category);
 
-            return Ok();
+            return Created(nameof(GetCategoryId), null);
         }
 
         [HttpGet("{id}")]

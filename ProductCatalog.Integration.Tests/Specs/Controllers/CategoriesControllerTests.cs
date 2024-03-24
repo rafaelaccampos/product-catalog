@@ -29,7 +29,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
 
             using (new AssertionScope())
             {
-                response.Should().HaveStatusCode(HttpStatusCode.OK);
+                response.Should().HaveStatusCode(HttpStatusCode.Created);
                 categoryFromDatabase.Should().BeEquivalentTo(category, options
                     => options
                     .ExcludingMissingMembers()

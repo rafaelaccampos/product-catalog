@@ -16,7 +16,7 @@ namespace ProductCatalog
 
         public async Task Create(Category category)
         {
-            await _context.Categories.InsertOneAsync(category);
+           await _context.Categories.InsertOneAsync(category);
         }
 
         public async Task<IEnumerable<Category?>> GetAll()
