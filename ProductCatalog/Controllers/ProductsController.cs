@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using ProductCatalog.Dtos;
 using ProductCatalog.Entities;
 using ProductCatalog.Infra.Repositories;
 
@@ -17,8 +18,15 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Product product)
+        public async Task<IActionResult> Create([FromBody] ProductInput productInput)
         {
+            var product = new Product(
+                productInput.Title, 
+                productInput.Description, 
+                productInput.Price,
+                productInput.Category, 
+                productInput.Owner);
+
             await _repository.Create(product);
 
             return Created(nameof(GetProductById), null);
@@ -34,7 +42,17 @@ namespace ProductCatalog.Controllers
                 return NotFound();
             }
 
-            return Ok(product);
+            var productOutput = new ProductOutput
+            {
+                Id = id,
+                Title = product.Title,
+                Description = product.Description,
+                Price = product.Price,
+                Category = product.Category,
+                Owner = product.Owner
+            };
+
+            return Ok(productOutput);
         }
 
         [HttpGet]
@@ -42,7 +60,17 @@ namespace ProductCatalog.Controllers
         {
             var products = await _repository.GetAll();
 
-            return Ok(products);
+            var productsOutput = products.Select(p => new ProductOutput
+            {
+                Id = p.Id.ToString(),
+                Title = p.Title,
+                Description = p.Description,
+                Price = p.Price,
+                Category = p.Category,
+                Owner = p.Owner
+            }).ToList();
+
+            return Ok(productsOutput);
         }
 
         [HttpPut("{id}")]
@@ -50,7 +78,17 @@ namespace ProductCatalog.Controllers
         {
             var product = await _repository.Update(new ObjectId(id), category);
 
-            return Ok(product);
+            var productOutput = new ProductOutput
+            {
+                Id = product!.Id.ToString(),
+                Title = product.Title,
+                Category = product.Category,
+                Description = product.Description,
+                Price = product.Price,
+                Owner = product.Owner
+            };
+
+            return Ok(productOutput);
         }
 
         [HttpDelete("{id}")]

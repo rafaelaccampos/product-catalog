@@ -6,16 +6,16 @@ namespace ProductCatalog.Entities
     public class Product
     {
         public Product(
-            string title, 
-            string description, 
-            decimal price, 
+            string title,
+            string description,
+            decimal price,
             string category,
             string owner)
-        { 
-            Title = title; 
-            Description = description; 
-            Price = price; 
-            Category = category; 
+        {
+            Title = title;
+            Description = description;
+            Price = price;
+            Category = category;
             Owner = owner;
         }
 

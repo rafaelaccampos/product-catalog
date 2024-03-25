@@ -2,6 +2,7 @@
 using FluentAssertions.Execution;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using ProductCatalog.Dtos;
 using ProductCatalog.Entities;
 using ProductCatalog.Infra;
 using ProductCatalog.Integration.Tests.Extensions;
@@ -17,12 +18,14 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
         [Test]
         public async Task ShouldBeAbleToCreateAProduct()
         {
-            var product = new Product(
-                "Tênis de corrida",
-                "Um calçado esportivo projetado para corrida, com sola amortecida",
-                10.00M,
-                "Calçados esportivos",
-                "David");
+            var product = new ProductInput
+            {
+                Title = "Tênis de corrida",
+                Description = "Um calçado esportivo projetado para corrida, com sola amortecida",
+                Price = 10.00M,
+                Category = "Calçados esportivos",
+                Owner = "David"
+            };
 
             var response = await _httpClient.PostAsync(URL_BASE, product.ToJsonContent());
 
@@ -32,9 +35,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
             using (new AssertionScope())
             {
                 response.Should().HaveStatusCode(HttpStatusCode.Created);
-                productFromDatabase.Should().BeEquivalentTo(product, options => options
-                .ExcludingMissingMembers()
-                .Excluding(p => p.Id));
+                productFromDatabase.Should().BeEquivalentTo(product);
             }
         }
 
@@ -56,7 +57,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
            var response = await _httpClient.GetAsync($"{URL_BASE}/{productFromDatabase.Id}");
            var responseContent = await response.Content.ReadAsStringAsync();
 
-           var productFromResponse = JsonConvert.DeserializeObject<Product>(responseContent);
+           var productFromResponse = JsonConvert.DeserializeObject<ProductOutput>(responseContent);
            
            using (new AssertionScope())
            {
@@ -95,7 +96,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
             var response = await _httpClient.GetAsync(URL_BASE);
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            var productsFromDatabase = JsonConvert.DeserializeObject<IList<Product>>(responseContent);
+            var productsFromDatabase = JsonConvert.DeserializeObject<IList<ProductOutput>>(responseContent);
 
             using (new AssertionScope())
             {
