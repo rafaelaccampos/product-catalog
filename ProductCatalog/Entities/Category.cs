@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-using System.Text.Json.Serialization;
 
 namespace ProductCatalog.Entities
 {
@@ -12,7 +11,6 @@ namespace ProductCatalog.Entities
             Owner = owner;
         }
 
-        [JsonIgnore]
         public ObjectId Id { get; private set; }
 
         public string Title { get; private set; } = null!;
