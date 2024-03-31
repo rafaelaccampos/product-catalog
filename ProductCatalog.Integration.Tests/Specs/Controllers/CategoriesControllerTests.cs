@@ -2,6 +2,7 @@
 using FluentAssertions.Execution;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using ProductCatalog.Dtos;
 using ProductCatalog.Entities;
 using ProductCatalog.Infra;
 using ProductCatalog.Integration.Tests.Extensions;
@@ -17,20 +18,29 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
         [Test]
         public async Task ShouldBeAbleToCreateCategory()
         {
-            var category = new Category(
-                "Calçados esportivos",
-                "Para correr com intensidade", 
-                "John");
+            var category = new CategoryInput
+            {
+                Title = "Calçados esportivos",
+                Description = "Para correr com intensidade",
+                Owner = "John",
+            };
 
             var response = await _httpClient.PostAsync(URL_BASE, category.ToJsonContent());
 
             var mongoContext = GetService<MongoContext>();
             var categoryFromDatabase = await mongoContext.Categories.Find(c => true).SingleOrDefaultAsync();
 
+            var categoryOutput = new CategoryOutput
+            {
+                Title = category.Title,
+                Description = category.Description,
+                Owner = category.Owner,
+            };
+
             using (new AssertionScope())
             {
                 response.Should().HaveStatusCode(HttpStatusCode.Created);
-                categoryFromDatabase.Should().BeEquivalentTo(category, options
+                categoryFromDatabase.Should().BeEquivalentTo(categoryOutput, options
                     => options
                     .ExcludingMissingMembers()
                     .Excluding(c => c.Id));
@@ -54,7 +64,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
             var response = await _httpClient.GetAsync(URL_BASE);
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            var categoriesFromResponse = JsonConvert.DeserializeObject<IList<Category>>(responseContent);
+            var categoriesFromResponse = JsonConvert.DeserializeObject<IList<CategoryOutput>>(responseContent);
 
             using (new AssertionScope())
             {
@@ -98,7 +108,7 @@ namespace ProductCatalog.Integration.Tests.Specs.Controllers
             var response = await _httpClient.GetAsync($"{URL_BASE}/{categoryFromDatabase.Id}");
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            var categoryFromResponse = JsonConvert.DeserializeObject<Category>(responseContent);
+            var categoryFromResponse = JsonConvert.DeserializeObject<CategoryOutput>(responseContent);
 
             using (new AssertionScope())
             {

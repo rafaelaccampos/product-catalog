@@ -62,7 +62,7 @@ namespace ProductCatalog.Controllers
 
             var productsOutput = products.Select(p => new ProductOutput
             {
-                Id = p.Id.ToString(),
+                Id = p!.Id.ToString(),
                 Title = p.Title,
                 Description = p.Description,
                 Price = p.Price,

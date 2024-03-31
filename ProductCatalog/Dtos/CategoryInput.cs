@@ -4,12 +4,10 @@ namespace ProductCatalog.Dtos
 {
     public class CategoryInput
     {
-        public string Id { get; private set; } = null!;
+        public string Title { get; set; } = null!;
 
-        public string Title { get; private set; } = null!;
+        public string Description { get; set; } = null!;
 
-        public string Description { get; private set; } = null!;
-
-        public string Owner { get; private set; } = null!;
+        public string Owner { get; set; } = null!;
     }
 }

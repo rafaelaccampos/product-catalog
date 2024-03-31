@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using ProductCatalog.Dtos;
 using ProductCatalog.Entities;
 
 namespace ProductCatalog.Controllers
@@ -16,8 +17,13 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Category category)
+        public async Task<IActionResult> Create([FromBody] CategoryInput categoryInput)
         {
+            var category = new Category(
+                categoryInput.Title,
+                categoryInput.Description,
+                categoryInput.Owner);
+
             await _repository.Create(category);
 
             return Created(nameof(GetCategoryId), null);
@@ -33,7 +39,15 @@ namespace ProductCatalog.Controllers
                 return NotFound();
             }
 
-            return Ok(category);
+            var categoryOutput = new CategoryOutput
+            {
+                Id = category.Id.ToString(),
+                Title = category.Title,
+                Description = category.Description,
+                Owner = category.Owner,
+            };
+
+            return Ok(categoryOutput);
         }
 
         [HttpGet]
@@ -41,7 +55,15 @@ namespace ProductCatalog.Controllers
         {
             var categories = await _repository.GetAll();
 
-            return Ok(categories);
+            var categoriesOutput = categories.Select(p => new CategoryOutput
+            {
+                Id = p!.Id.ToString(),
+                Title = p.Title,
+                Description = p.Description,
+                Owner = p.Owner,
+            }).ToList();
+
+            return Ok(categoriesOutput);
         }
 
         [HttpDelete("{id}")]
